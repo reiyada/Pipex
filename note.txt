@@ -1,0 +1,21 @@
+//OPEN TYPE// -> <fcntl.h>
+O_RDONLY	Opens the file in read-only mode.
+O_WRONLY	Opens the file in write-only mode.
+O_RDWR	    Opens the file in read and write mode.
+O_CREAT	    Create a file if it doesn’t exist.
+O_EXCL	    Prevent creation if it already exists.
+O_ APPEND	Opens the file and places the cursor at the end of the contents.
+O_ASYNC	    Enable input and output control by signal.
+O_CLOEXEC	Enable close-on-exec mode on the open file.
+O_NONBLOCK	Disables blocking of the file opened.
+O_TMPFILE	Create an unnamed temporary file at the specified path.
+
+//process//
+fork()      : you will make a child process, it returns the process id
+                -> the id of the child process is ALWAYS 0
+                -> the child process has the SAME memory as the parent
+wait()      : wait until the child process finishes
+getpid()    : this returns the process id
+getppid()   : this returns the process id of the parent process
+                -> every process has the parent process
+            

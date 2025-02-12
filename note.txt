@@ -26,6 +26,7 @@ getppid()   : this returns the process id of the parent process
 wait()      : blocks the calling process until its child processes exits
                 or a signal is received. this returns its PID
                 -> returns -1 if there is no child
+exit(int status) : terminates the process immediately
 ---------------------------------------------------------------------------------
 int main()
 {
@@ -154,3 +155,4 @@ execve(char *filepath, char **argv, char **envp) : replace the current process w
                                         SHELL : Default shell (/bin/bash, /bin/zsh)
                                         USER : Current logged-in username
 
+https://github.com/jdecorte-be/42-Pipex

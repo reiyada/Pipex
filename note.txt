@@ -150,9 +150,12 @@ execve(char *filepath, char **argv, char **envp) : replace the current process w
                                     execve("/bin/ls", argv, NULL)
                                     -> /bin/ls -l -a
                                     -> environment variables
-                                        PATH : Directories where executables are searched
-                                        HOME : User's home directory
-                                        SHELL : Default shell (/bin/bash, /bin/zsh)
-                                        USER : Current logged-in username
-
+                                        //KEY//
+                                        $PATH : Directories where executables are searched
+                                        $HOME : User's home directory
+                                        $SHELL : Default shell (/bin/bash, /bin/zsh)
+                                        $USER : Current logged-in username
+                                            -> Keys and values are paired like "KEY=VALUE" 
 https://github.com/jdecorte-be/42-Pipex
+
+

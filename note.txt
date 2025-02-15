@@ -158,4 +158,9 @@ execve(char *filepath, char **argv, char **envp) : replace the current process w
                                             -> Keys and values are paired like "KEY=VALUE" 
 tester: https://github.com/michmos/42_pipex_tester
 
-
+//ERROR for the mandatory part//
+- If the argument count is not 5
+- If there is any empty arguments (ex) ./pipex infile "ls -l" "" outfile
+- If the pipe creation fails
+- If fork fails
+- If you

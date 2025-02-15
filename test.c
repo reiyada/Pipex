@@ -113,8 +113,22 @@
 // }
 
 
-int main()
-{
-    char *tab[] = {"hello I am rei", "Hello hehe", "rei", NULL};
-    printf("%s\n", tab[0] + 6);
-}
+// int main()
+// {
+//     char *tab[] = {"hello I am rei", "Hello hehe", "rei", NULL};
+//     printf("%s\n", tab[0] + 6);
+// }
+
+// #include <unistd.h>
+// #include <stdio.h>
+
+// int main()
+// {
+//     char *args[] = {"/bin/ls", "-l", NULL};
+//     execve("/bin/ls", args, NULL);
+
+//     // This line will NEVER be executed if execve() succeeds
+//     printf("This will not print!\n");
+//     return 0;
+// }
+

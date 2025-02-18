@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:34:18 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/15 16:23:12 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/18 16:07:00 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,6 @@ void ft_middle_child(char **argv, int *pipe_fd, char **envp, int i, int num_cmds
     ft_exec(argv[i + 2], envp);
 }
 
-
-
 void ft_last_child(int argc, char **argv, int *pipe_fd, char **envp)
 {
     int fd;
@@ -110,6 +108,35 @@ void ft_last_child(int argc, char **argv, int *pipe_fd, char **envp)
     ft_exec(argv[last - 1], envp);//execute the second command
 }
 
+void    ft_here_doc(char *limiter, int argc)
+{
+    pid_t reader;
+    int pipe_fd[2];
+    char *line;
+    
+    if (argc < 6)
+        return (ft_putstr_fd("[Error] Incorrect argument number!\n", 2));
+    if (pipe(pipe_fd) == -1)
+        return (ft_putstr_fd("[Error] Pipe creation failed!\n", 2));
+    reader = fork();
+    if (reader == 0)//child
+    {
+        close(pipe_fd[0]);
+        while(get_next_line(&line))
+        {
+            if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+                exit(EXIT_FAILURE);
+            write(pipe_fd[1], line, ft_strlen(line));
+        }
+    }
+    else
+    {
+        close(pipe_fd[1]);
+        dup2(pipe_fd[0], STDIN_FILENO);
+        wait(NULL);
+    }
+}
+
 int main(int argc, char **argv, char **envp)
 {
     int status;
@@ -117,54 +144,65 @@ int main(int argc, char **argv, char **envp)
     pid_t *pid;
     int i;
     int num_cmds;
+    char *limiter;
 
-    if (argc <= 4)
-        return (ft_putstr_fd("[Error] Incorrect argument number!\n", 2), 1);
-    num_cmds = argc - 3;
-    pipe_fd = malloc(sizeof(int) * (2 * (num_cmds - 1)));
-    pid = malloc(sizeof(pid_t) * num_cmds);
-    if (!pipe_fd || !pid)
-        return (ft_putstr_fd("[Error] Memory allocation failed!\n", 2), 1);
-    i = 0;
-    while (i < num_cmds - 1)
+    if (ft_strncmp(argv[1], "here_doc", 8) == 0)
     {
-        if (pipe(pipe_fd + (2 * i)) == -1)
-            return (ft_putstr_fd("[Error] Pipe creation failed!\n", 2), 1);
-        i++;
+        i = 3;
+			fileout = open_file(argv[argc - 1], 0);
+			here_doc(argv[2], argc);
     }
-    i = 0;
-    while (i < num_cmds)
+    else
     {
-        pid[i] = fork();
-        if (pid[i] == -1)
-            return (ft_putstr_fd("[Error] Fork failed!\n", 2), 1);
-        if (pid[i] == 0)
+        if (argc <= 4)
+            return (ft_putstr_fd("[Error] Incorrect argument number!\n", 2), 1);
+        num_cmds = argc - 3;
+        pipe_fd = malloc(sizeof(int) * (2 * (num_cmds - 1)));
+        pid = malloc(sizeof(pid_t) * num_cmds);
+        if (!pipe_fd || !pid)
+            return (ft_putstr_fd("[Error] Memory allocation failed!\n", 2), 1);
+        i = 0;
+        while (i < num_cmds - 1)
         {
-            if (num_cmds == 1)
-                ft_one_child(argv, envp);
-            else if (i == 0)
-                ft_first_child(argv, pipe_fd, envp);
-            else if (i == num_cmds - 1)
-                ft_last_child(argc, argv, pipe_fd, envp);
-            else
-                ft_middle_child(argv, pipe_fd, envp, i, num_cmds);
+            if (pipe(pipe_fd + (2 * i)) == -1)
+                return (ft_putstr_fd("[Error] Pipe creation failed!\n", 2), 1);
+            i++;
         }
-        i++;
+        i = 0;
+        while (i < num_cmds)
+        {
+            pid[i] = fork();
+            if (pid[i] == -1)
+                return (ft_putstr_fd("[Error] Fork failed!\n", 2), 1);
+            if (pid[i] == 0)
+            {
+                if (num_cmds == 1)
+                    ft_one_child(argv, envp);
+                else if (i == 0)
+                    ft_first_child(argv, pipe_fd, envp);
+                else if (i == num_cmds - 1)
+                    ft_last_child(argc, argv, pipe_fd, envp);
+                else
+                    ft_middle_child(argv, pipe_fd, envp, i, num_cmds);
+            }
+            i++;
+        }
+        i = 0;
+        while (i < 2 * (num_cmds - 1))
+        {
+            close(pipe_fd[i]);
+            i++;
+        }
+        i = 0;
+        while (i < num_cmds)
+        {
+            waitpid(pid[i], &status, 0);
+            i++;
+        }
+        free(pipe_fd);
+        free(pid);
+        return (WEXITSTATUS(status));
     }
-    i = 0;
-    while (i < 2 * (num_cmds - 1))
-    {
-        close(pipe_fd[i]);
-        i++;
-    }
-    i = 0;
-    while (i < num_cmds)
-    {
-        waitpid(pid[i], &status, 0);
-        i++;
-    }
-    free(pipe_fd);
-    free(pid);
-    return (WEXITSTATUS(status));
+    
 }
 

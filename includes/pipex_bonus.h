@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:32:40 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/15 14:59:20 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/18 15:51:48 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include <sys/wait.h>
 #include <string.h>
 #include "../libft/libft.h"
+#include "../gnl/get_next_line.h"
+
 
 // struct t_fork
 // {

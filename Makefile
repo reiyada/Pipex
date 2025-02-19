@@ -6,7 +6,7 @@
 #    By: ryada <ryada@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/13 12:12:41 by ryada             #+#    #+#              #
-#    Updated: 2025/02/15 15:45:30 by ryada            ###   ########.fr        #
+#    Updated: 2025/02/19 13:22:59 by ryada            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ RM = rm -rf
 SRC_DIR = srcs
 BONUS_DIR = srcs_bonus
 LIBFT_DIR = libft
+GNL_DIR = gnl
 INCLUDES = -Iincludes
 
 # Source Files (Mandatory)
@@ -32,7 +33,9 @@ SRCS = $(SRC_DIR)/pipex.c \
 
 # Source Files (Bonus)
 SRCS_BONUS = $(BONUS_DIR)/pipex_bonus.c \
-             $(BONUS_DIR)/utils_bonus.c
+             $(BONUS_DIR)/utils_bonus.c \
+			 $(GNL_DIR)/get_next_line.c \
+			 $(GNL_DIR)/get_next_line_utils.c \
 
 # Object Files (Mandatory)
 OBJS = $(SRCS:.c=.o)

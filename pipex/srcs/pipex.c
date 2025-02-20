@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:34:18 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/15 14:57:32 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/20 17:24:30 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ int main(int argc, char **argv, char **envp)
         return (ft_putstr_fd("[Error] Fork failed!\n", 2), 1);
     if (pid1 == 0) // First child executes cmd1
         ft_first_child(argv, pipe_fd, envp);
+    waitpid(pid1, &status, 0);
     close(pipe_fd[1]); // Parent closes write end of pipe
     pid2 = fork(); // Fork again for the sond commanecd
     if (pid2 == -1)

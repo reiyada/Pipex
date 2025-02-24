@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:32:40 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/15 12:14:35 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/24 13:09:20 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,20 @@
 #include <string.h>
 #include "../libft/libft.h"
 
+//getenv.c//
+char *ft_getenv(char *key, char **envp);
+char *ft_check_exec_path(char *dir, char *cmd);
+char *ft_get_path(char *cmd, char **envp);
+
 //pipex.c//
+void ft_error_handler(int type, char **cmd_tab, char *cmd_path);
 void ft_exec(char *cmd, char **envp);
 void ft_first_child(char **argv, int *pipe_fd, char **envp);
 void ft_second_child(char **argv, int *pipe_fd, char **envp);
 
 //utils.c//
 void	ft_free_tab(char **tab);
-char *ft_getenv(char *key, char **envp);
-char *ft_get_path(char *cmd, char **envp);
-int ft_check_argv(char **argv);
-//int ft_check_cmd(char **argv, char **envp);
+int     ft_open_file(char *filename, int second);
+void ft_error_handler(int type, char **cmd_tab, char *cmd_path);
 
 #endif

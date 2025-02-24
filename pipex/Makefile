@@ -6,7 +6,7 @@
 #    By: ryada <ryada@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/13 12:12:41 by ryada             #+#    #+#              #
-#    Updated: 2025/02/19 13:43:59 by ryada            ###   ########.fr        #
+#    Updated: 2025/02/24 14:56:54 by ryada            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,27 +15,30 @@ NAME = pipex
 
 # Compiler and Flags
 CC = gcc
-CFLAGS = -Werror -Wall -Wextra -fsanitize=address -no-pie
+CFLAGS = -Werror -Wall -Wextra
 
 # Remove Command
 RM = rm -rf
 
 # Directories
 SRC_DIR = srcs
-BONUS_DIR = srcs_bonus
 LIBFT_DIR = libft
-GNL_DIR = gnl
 INCLUDES = -Iincludes
+BONUS_DIR = srcs_bonus
+GNL_DIR = gnl
 
 # Source Files (Mandatory)
-SRCS = $(SRC_DIR)/pipex.c \
-       $(SRC_DIR)/utils.c
+SRCS =  $(SRC_DIR)/getenv.c \
+		$(SRC_DIR)/pipex.c \
+		$(SRC_DIR)/utils.c
 
 # Source Files (Bonus)
-SRCS_BONUS = $(BONUS_DIR)/pipex_bonus.c \
-             $(BONUS_DIR)/utils_bonus.c \
-			 $(GNL_DIR)/get_next_line.c \
-			 $(GNL_DIR)/get_next_line_utils.c \
+SRCS_BONUS = $(BONUS_DIR)/getenv_bonus.c \
+				$(BONUS_DIR)/pipex_bonus.c \
+				$(BONUS_DIR)/process_bonus.c \
+				$(BONUS_DIR)/utils_bonus.c \
+				$(GNL_DIR)/get_next_line.c \
+				$(GNL_DIR)/get_next_line_utils.c
 
 # Object Files (Mandatory)
 OBJS = $(SRCS:.c=.o)
@@ -46,7 +49,7 @@ OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 # Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-# Default Rule - Compile Pipex (Mandatory with Clean First)
+# Default Rule - Compile Pipex (Mandatory) (Now Cleans First)
 all: clean $(LIBFT) $(NAME)
 
 # Compile Pipex (Mandatory)
@@ -62,8 +65,11 @@ $(SRC_DIR)/%.o: $(SRC_DIR)/%.c
 $(BONUS_DIR)/%.o: $(BONUS_DIR)/%.c
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-# Compile Pipex Bonus
-bonus: fclean $(LIBFT) $(OBJS_BONUS) 
+$(GNL_DIR)/%.o: $(GNL_DIR)/%.c
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Compile Bonus Pipex (Now Cleans First)
+bonus: fclean $(LIBFT) $(OBJS_BONUS)
 	@$(CC) $(CFLAGS) $(OBJS_BONUS) -o $(NAME) -L$(LIBFT_DIR) -lft
 	@echo "🚀 Pipex (Bonus) compiled successfully!"
 

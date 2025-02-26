@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 08:33:43 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/26 16:38:53 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/26 17:44:29 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,32 +46,6 @@ int	ft_open_file(char *filename, int mode, pid_t *pid)
 	return (fd);
 }
 
-// void	ft_error_handler(int type, char **cmd_tab, char *cmd_path)
-// {
-// 	if (type == 1)
-// 	{
-// 		ft_putstr_fd("[Error] Command parsing failed!\n", 2);
-// 		ft_free_tab(cmd_tab);
-// 		exit(1);
-// 	}
-// 	else if (type == 2)
-// 	{
-// 		ft_putstr_fd("[Error] Command not found! : ", 2);
-// 		ft_putendl_fd(cmd_tab[0], 2);
-// 		ft_free_tab(cmd_tab);
-// 		exit(127);
-// 	}
-// 	else if (type == 3)
-// 	{
-// 		ft_putstr_fd("[Error] Command execution failed!: ", 2);
-// 		ft_putendl_fd(cmd_tab[0], 2);
-// 		if (cmd_path && cmd_path != cmd_tab[0]) // Only free if dynamically allocated
-// 			free(cmd_path);
-// 		ft_free_tab(cmd_tab);
-// 		exit(1);
-// 	}
-// }
-
 void	ft_error_exit(char *msg)
 {
 	ft_putstr_fd(msg, 2);
@@ -100,7 +74,6 @@ void	ft_error_handler(int type, char **cmd_tab, char *cmd_path, pid_t *pid)
 	ft_free_tab(cmd_tab);
 	if (cmd_path && cmd_path != cmd_tab[0]) 
 		free(cmd_path);
-
 	if (type == 2)
 	{
 		free(pid);

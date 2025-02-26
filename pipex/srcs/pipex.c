@@ -6,11 +6,12 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:34:18 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/24 13:13:35 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/25 15:28:55 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
+
 
 void	ft_exec(char *cmd, char **envp)
 {
@@ -97,3 +98,12 @@ int	main(int argc, char **argv, char **envp)
 	waitpid(pid2, &status, 0); // Wait for cmd2
 	return (WEXITSTATUS(status)); // Return the exit status of cmd2 (last command)
 }
+
+// note about the exit status
+// You need to exit with the exit status of the LAST command
+// (ex) ls -l | ls -a -> exit with 0 bc ls -a(LAST CMD) succeed
+// When we use pipes, the last cmd matters the most 
+// (ex) ffffasdj | ls -a -> we ignore the first cmd so we just execute ls -a and exit with 0
+// (ex) ls -l | fjsaflsajdl -> we exit with 127 bc the las cmd was not found
+// when the cmd was not found, you exit with 127
+// you can always check the esit status by doing "echo $?" on terminal

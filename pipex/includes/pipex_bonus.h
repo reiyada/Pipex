@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:32:40 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/24 17:20:53 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/26 10:40:29 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ void ft_first_child(char **argv, int *pipe_fd, char **envp, int here_doc, pid_t 
 void ft_middle_child(char **argv, int *pipe_fd, char **envp, int i, int num_cmds);
 void ft_last_child(int argc, char **argv, int *pipe_fd, char **envp, int here_doc, pid_t *pid);
 void	ft_handle_here_doc_child(int *pipe_fd, char *limiter);
-void ft_here_doc(char *limiter);
+void ft_here_doc(int argc, char *limiter);
 
 //process_bonus.c//
 void ft_create_pipes(int *pipe_fd, int num_cmds);
 void ft_create_process(int argc, char **argv, int *pipe_fd, char **envp, int here_doc, pid_t *pid);
 void ft_close_pipes(int *pipe_fd, int num_cmds);
-void ft_wait_children(pid_t *pid, int num_cmds);
+int ft_wait_children(pid_t *pid, int num_cmds);
 
 //utils_bonus.c//
 void	ft_free_tab(char **tab);

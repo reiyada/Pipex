@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:32:40 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/26 10:40:29 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/26 16:41:57 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ char	*ft_check_exec_path(char *dir, char *cmd);
 char	*ft_get_path(char *cmd, char **envp);
 
 //pipex_bonus.c//
-void ft_exec(char *cmd, char **envp);
+void ft_exec(char *cmd, char **envp, pid_t *pid);
 void ft_first_child(char **argv, int *pipe_fd, char **envp, int here_doc, pid_t *pid);
-void ft_middle_child(char **argv, int *pipe_fd, char **envp, int i, int num_cmds);
+void ft_middle_child(char **argv, int *pipe_fd, char **envp, int i, pid_t *pid);
 void ft_last_child(int argc, char **argv, int *pipe_fd, char **envp, int here_doc, pid_t *pid);
 void	ft_handle_here_doc_child(int *pipe_fd, char *limiter);
 void ft_here_doc(int argc, char *limiter);
@@ -43,8 +43,8 @@ int ft_wait_children(pid_t *pid, int num_cmds);
 
 //utils_bonus.c//
 void	ft_free_tab(char **tab);
-int ft_open_file(char *filename, int mode, int *pipe_fd, pid_t *pid);
-void	ft_error_handler(int type, char **cmd_tab, char *cmd_path);
+int ft_open_file(char *filename, int mode, pid_t *pid);
+void	ft_error_handler(int type, char **cmd_tab, char *cmd_path, pid_t *pid);
 void ft_error_exit(char *msg);
 
 #endif

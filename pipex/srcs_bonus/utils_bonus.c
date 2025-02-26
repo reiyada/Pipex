@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 08:33:43 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/26 12:03:23 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/26 16:38:53 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ft_free_tab(char **tab)
 	free(tab);
 }
 
-int	ft_open_file(char *filename, int mode, int *pipe_fd, pid_t *pid)
+int	ft_open_file(char *filename, int mode, pid_t *pid)
 {
 	int	fd;
 
@@ -40,9 +40,8 @@ int	ft_open_file(char *filename, int mode, int *pipe_fd, pid_t *pid)
 		//printf("DEBUG\n");
 		ft_putstr_fd("[Error] Cannot open file: ", 2);
 		ft_putendl_fd(filename, 2);
-		free(pipe_fd);
 		free(pid);
-		exit(EXIT_FAILURE);
+		exit(1);
 	}
 	return (fd);
 }
@@ -89,7 +88,7 @@ void	ft_safe_print_error(const char *msg, const char *arg)
 	}
 }
 
-void	ft_error_handler(int type, char **cmd_tab, char *cmd_path)
+void	ft_error_handler(int type, char **cmd_tab, char *cmd_path, pid_t *pid)
 {
 	if (type == 1)
 		ft_safe_print_error("[Error] Command parsing failed!\n", NULL);
@@ -103,7 +102,13 @@ void	ft_error_handler(int type, char **cmd_tab, char *cmd_path)
 		free(cmd_path);
 
 	if (type == 2)
+	{
+		free(pid);
 		exit (127);
+	}
 	else
+	{
+		free(pid);
 		exit (1);
+	}
 }

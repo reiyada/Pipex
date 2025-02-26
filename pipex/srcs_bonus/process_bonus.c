@@ -6,24 +6,24 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:33:22 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/26 12:03:47 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/26 16:42:09 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex_bonus.h"
 
-void	ft_create_pipes(int *pipe_fd, int num_cmds)
-{
-	int	i;
+// void	ft_create_pipes(int *pipe_fd, int num_cmds)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < num_cmds - 1)
-	{
-		if (pipe(pipe_fd + (2 * i)) == -1)//pipe_fd + (2 * i) points the current pipe_fd
-			ft_error_exit("[Error] Pipe creation failed!\n");
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (i < num_cmds - 1)
+// 	{
+// 		if (pipe(pipe_fd + (2 * i)) == -1)//pipe_fd + (2 * i) points the current pipe_fd
+// 			ft_error_exit("[Error] Pipe creation failed!\n");
+// 		i++;
+// 	}
+// }
 
 // int	ft_create_process(int argc, char **argv, int *pipe_fd, char **envp, int here_doc, pid_t *pid)
 // {
@@ -91,6 +91,7 @@ void	ft_create_process(int argc, char **argv, int *pipe_fd, char **envp, int her
 {
 	int	i;
 	int	num_cmds;
+	//int status;
 
 	num_cmds = argc - 3;
 	if (here_doc)
@@ -102,6 +103,7 @@ void	ft_create_process(int argc, char **argv, int *pipe_fd, char **envp, int her
 		if (pid[i] == -1)
 		{
 			perror("Fork failed");
+			free(pid);
 			exit(EXIT_FAILURE);
 		}
 		if (pid[i] == 0)  // Child process
@@ -112,25 +114,12 @@ void	ft_create_process(int argc, char **argv, int *pipe_fd, char **envp, int her
 			else if (i == num_cmds - 1)
 				ft_last_child(argc, argv, pipe_fd, envp, here_doc, pid);
 			else
-				ft_middle_child(argv, pipe_fd, envp, i, num_cmds);
+				ft_middle_child(argv, pipe_fd, envp, i, pid);
 		}
 		i++;
 	}
-	// Parent closes all pipes
-	i = 0;
-	while (i < (2 * (num_cmds - 1)))
-	{
-		close(pipe_fd[i]);
-		i++;
-	}
-	// Parent waits for all children
-	i = 0;
-	while (i < num_cmds)
-	{
-		if (i > 0 && i < num_cmds - 1)
-			pid[i + 1] = wait(NULL);
-		i++;
-	}
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
 }
 
 
@@ -184,18 +173,18 @@ void	ft_create_process(int argc, char **argv, int *pipe_fd, char **envp, int her
 // }
 
 
-void	ft_close_pipes(int *pipe_fd, int num_cmds)
-{
-	int	i;
+// void	ft_close_pipes(int *pipe_fd, int num_cmds)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < 2 * (num_cmds - 1))//close all the pipes between each cmds
-	{
-		close (pipe_fd[i]);
-		i++;
-	}
-	free(pipe_fd);
-}
+// 	i = 0;
+// 	while (i < 2 * (num_cmds - 1))//close all the pipes between each cmds
+// 	{
+// 		close (pipe_fd[i]);
+// 		i++;
+// 	}
+// 	free(pipe_fd);
+// }
 
 // void	ft_wait_children(pid_t *pid, int num_cmds)
 // {
@@ -216,9 +205,11 @@ int	ft_wait_children(pid_t *pid, int num_cmds)
 	int status;
 
 	i = 0;
+	status = 0;
 	while (i < num_cmds)
 	{
 		waitpid(pid[i], &status, 0);
+		//printf("%d\n", WEXITSTATUS(status));
 		i++;
 	}
 	free(pid);

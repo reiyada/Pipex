@@ -6,7 +6,7 @@
 #    By: ryada <ryada@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/13 12:12:41 by ryada             #+#    #+#              #
-#    Updated: 2025/02/24 14:56:54 by ryada            ###   ########.fr        #
+#    Updated: 2025/02/26 16:03:21 by ryada            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = pipex
 
 # Compiler and Flags
 CC = gcc
-CFLAGS = -Werror -Wall -Wextra
+CFLAGS = -Werror -Wall -Wextra -g
 
 # Remove Command
 RM = rm -rf

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rei <rei@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:32:40 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/27 15:49:43 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/27 22:43:26 by rei              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ char	*ft_get_path(char *cmd, char **envp);
 //pipex_bonus.c//
 void ft_exec(char *cmd, char **envp, pid_t *pid);
 void	ft_first_child(char **argv, int *pipe_fd, char **envp, t_edata edata);
-void	ft_middle_child(int *pipe_fd, char **envp, t_edata edata);
+void	ft_middle_child(int *prev_pipe_fd, int *next_pipe_fd, char **envp, t_edata edata);
 void	ft_last_child(int argc, char **argv, int *pipe_fd, char **envp, t_edata edata);
 void	ft_handle_here_doc_child(int *pipe_fd, char *limiter);
 void ft_here_doc(int argc, char *limiter);
 
 //process_bonus.c//
-void	ft_create_process(int argc, char **argv, int *pipe_fd, char **envp, t_edata edata);
+void	ft_create_process(int argc, char **argv, char **envp, t_edata edata);
 void	ft_wait_children(t_edata *edata);
 
 //utils_bonus.c//

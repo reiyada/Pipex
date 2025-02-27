@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rei <rei@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:34:18 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/27 16:20:02 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/27 22:47:59 by rei              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	ft_first_child(char **argv, int *pipe_fd, char **envp, t_edata edata)
 	int	fd;
 
 	close(pipe_fd[0]);
+	//close(pipe_fd[1]);
 	if (!edata.here_doc)
 	{
 		fd = ft_open_file(argv[1], 2, edata.pid);
@@ -56,15 +57,27 @@ void	ft_first_child(char **argv, int *pipe_fd, char **envp, t_edata edata)
 		ft_exec(argv[2], envp, edata.pid);
 }
 
-void	ft_middle_child(int *pipe_fd, char **envp, t_edata edata)
+// void	ft_middle_child(int *pipe_fd, char **envp, t_edata edata)
+// {
+// 	close(pipe_fd[1]);//close unused write end
+// 	dup2(pipe_fd[0], STDIN_FILENO);
+// 	close(pipe_fd[0]);
+// 	dup2(pipe_fd[1], STDOUT_FILENO);
+// 	close(pipe_fd[1]);
+// 	ft_exec(edata.current_cmd, envp, edata.pid);
+// }
+
+void	ft_middle_child(int *prev_pipe_fd, int *next_pipe_fd, char **envp, t_edata edata)
 {
-	close(pipe_fd[1]);//close unused write end
-	dup2(pipe_fd[0], STDIN_FILENO);
-	close(pipe_fd[0]);
-	dup2(pipe_fd[1], STDOUT_FILENO);
-	close(pipe_fd[1]);
+	close(prev_pipe_fd[1]);
+	dup2(prev_pipe_fd[0], STDIN_FILENO);
+	close(prev_pipe_fd[0]);
+	dup2(next_pipe_fd[1], STDOUT_FILENO);
+	close(next_pipe_fd[1]);
+	close(next_pipe_fd[0]); 
 	ft_exec(edata.current_cmd, envp, edata.pid);
 }
+
 
 void	ft_last_child(int argc, char **argv, int *pipe_fd, char **envp, t_edata edata)
 {
@@ -127,7 +140,6 @@ void	ft_here_doc(int argc, char *limiter)
 int	main(int argc, char **argv, char **envp)
 {
 	t_edata	edata;
-	int		pipe_fd[2];
 
 	if (argc < 5)
 		return (ft_error_exit("[Error] Incorrect argument number!\n"), 1);
@@ -137,9 +149,7 @@ int	main(int argc, char **argv, char **envp)
 	edata.pid = malloc(sizeof(pid_t) *  edata.num_cmds);
 	if (!edata.pid)
 		return (free(edata.pid), ft_error_exit("[Error] Memory allocation failed!\n"), 1);
-	if (pipe(pipe_fd) == -1)
-		return (ft_error_exit("[Error] Pipe creation failed!\n"), 1);
-	ft_create_process(argc, argv, pipe_fd, envp, edata);
+	ft_create_process(argc, argv, envp, edata);
 	ft_wait_children(&edata);
 	if (edata.pid != 0)
 		free (edata.pid);

@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:32:40 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/26 17:36:22 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/27 15:49:43 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_edata
 	int num_cmds;
     char *current_cmd;
     pid_t *pid;
+    int status;
 }	t_edata;
 
 //getenv_bonus.c//
@@ -46,12 +47,13 @@ void ft_here_doc(int argc, char *limiter);
 
 //process_bonus.c//
 void	ft_create_process(int argc, char **argv, int *pipe_fd, char **envp, t_edata edata);
-int	ft_wait_children(t_edata edata);
+void	ft_wait_children(t_edata *edata);
 
 //utils_bonus.c//
 void	ft_free_tab(char **tab);
 int ft_open_file(char *filename, int mode, pid_t *pid);
 void	ft_error_handler(int type, char **cmd_tab, char *cmd_path, pid_t *pid);
 void ft_error_exit(char *msg);
+t_edata ft_init_edata(int argc, char **argv);
 
 #endif

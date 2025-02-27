@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 08:33:43 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/26 17:44:29 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/27 15:52:10 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,26 @@ void	ft_error_handler(int type, char **cmd_tab, char *cmd_path, pid_t *pid)
 	else
 	{
 		free(pid);
-		exit (1);
+		exit (EXIT_FAILURE);
 	}
+}
+
+t_edata ft_init_edata(int argc, char **argv)
+{
+	t_edata edata;
+
+	edata.status = 0;
+	edata.current_cmd = NULL;
+	edata.pid = NULL;
+	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
+	{
+		edata.here_doc = 1;
+		edata.num_cmds = 2;
+	}
+	else
+	{
+		edata.here_doc = 0;
+		edata.num_cmds = argc -3;
+	}
+	return (edata);
 }

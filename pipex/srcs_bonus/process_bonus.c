@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:33:22 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/26 17:35:57 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/27 16:15:02 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ void	ft_create_process(int argc, char **argv, int *pipe_fd, char **envp, t_edata
 		edata.pid[i] = fork();
 		if (edata.pid[i] == -1)
 		{
-			perror("Fork failed");
 			free(edata.pid);
-			exit(EXIT_FAILURE);
+			ft_error_exit("[Error] Fork faild!\n");
 		}
 		if (edata.pid[i] == 0)  // Child process
 		{
@@ -38,22 +37,24 @@ void	ft_create_process(int argc, char **argv, int *pipe_fd, char **envp, t_edata
 		}
 		i++;
 	}
-	close(pipe_fd[0]);
-	close(pipe_fd[1]);
+	close(pipe_fd[0]);//parent closes these pipes
+	close(pipe_fd[1]);//because we no longer need the pipe after all forks
 }
 
-int	ft_wait_children(t_edata edata)
+void	ft_wait_children(t_edata *edata)
 {
 	int	i;
-	int status;
+	int	status;
+	int	last_exit = 0; //Store the last exit status
 
 	i = 0;
-	status = 0;
-	while (i < edata.num_cmds)
+	while (i < edata->num_cmds)
 	{
-		waitpid(edata.pid[i], &status, 0);
+		waitpid(edata->pid[i], &status, 0);
+		if (WIFEXITED(status)) //Ensure the process exited normally
+			last_exit = WEXITSTATUS(status);
 		i++;
 	}
-	free(edata.pid);
-	return (status);
+	edata->status = last_exit; //Save the last command's exit status
 }
+

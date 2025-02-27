@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:34:18 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/26 17:34:58 by ryada            ###   ########.fr       */
+/*   Updated: 2025/02/27 16:20:02 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ void	ft_exec(char *cmd, char **envp, pid_t *pid)
 	ft_free_tab(cmd_tab);
 }
 
+// The key thing to remember is that each process has its own copy of file descriptors
+// when it is forked. So, just because the first child closes pipe_fd[1],
+// it doesn’t mean that the middle child automatically loses access to pipe_fd[1].
+// The parent still holds a copy, and when it forks the middle child, the middle child inherits a copy of pipe_fd[1].
+
 void	ft_first_child(char **argv, int *pipe_fd, char **envp, t_edata edata)
 {
 	int	fd;
@@ -53,7 +58,7 @@ void	ft_first_child(char **argv, int *pipe_fd, char **envp, t_edata edata)
 
 void	ft_middle_child(int *pipe_fd, char **envp, t_edata edata)
 {
-	close(pipe_fd[1]);
+	close(pipe_fd[1]);//close unused write end
 	dup2(pipe_fd[0], STDIN_FILENO);
 	close(pipe_fd[0]);
 	dup2(pipe_fd[1], STDOUT_FILENO);
@@ -119,57 +124,25 @@ void	ft_here_doc(int argc, char *limiter)
 	}
 }
 
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	int		status;
-// 	int		here_doc;
-// 	int		num_cmds;
-// 	int		pipe_fd[2];
-// 	pid_t	*pid;
-
-// 	status = 0;
-// 	here_doc = 0;
-// 	num_cmds = argc -3;
-// 	if (argc < 5)
-// 		return (ft_error_exit("[Error] Incorrect argument number!\n"), 1);
-// 	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
-// 	{
-// 		ft_here_doc(argc, argv[2]);
-// 		here_doc = 1;
-// 		num_cmds = 2;
-// 	}
-// 	pid = malloc(sizeof(pid_t) *  num_cmds);
-// 	if (!pid)
-// 		return (free(pid), ft_error_exit("[Error] Memory allocation failed!\n"), 1);
-// 	if (pipe(pipe_fd) == -1)
-// 		return (ft_error_exit("[Error] Pipe creation failed!\n"), 1);
-// 	ft_create_process(argc, argv, pipe_fd, envp, here_doc, pid);
-// 	return (status = ft_wait_children(pid, num_cmds), WEXITSTATUS(status));
-// }
-
 int	main(int argc, char **argv, char **envp)
 {
-	int		status;
 	t_edata	edata;
 	int		pipe_fd[2];
 
-	status = 0;
-	edata.here_doc = 0;
-	edata.num_cmds = argc -3;
 	if (argc < 5)
 		return (ft_error_exit("[Error] Incorrect argument number!\n"), 1);
-	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
-	{
+	edata = ft_init_edata(argc, argv);
+	if (edata.here_doc)
 		ft_here_doc(argc, argv[2]);
-		edata.here_doc = 1;
-		edata.num_cmds = 2;
-	}
 	edata.pid = malloc(sizeof(pid_t) *  edata.num_cmds);
 	if (!edata.pid)
 		return (free(edata.pid), ft_error_exit("[Error] Memory allocation failed!\n"), 1);
 	if (pipe(pipe_fd) == -1)
 		return (ft_error_exit("[Error] Pipe creation failed!\n"), 1);
 	ft_create_process(argc, argv, pipe_fd, envp, edata);
-	return (status = ft_wait_children(edata), WEXITSTATUS(status));
+	ft_wait_children(&edata);
+	if (edata.pid != 0)
+		free (edata.pid);
+	return (edata.status);
 }
 

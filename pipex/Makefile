@@ -6,7 +6,7 @@
 #    By: ryada <ryada@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/13 12:12:41 by ryada             #+#    #+#              #
-#    Updated: 2025/02/26 16:03:21 by ryada            ###   ########.fr        #
+#    Updated: 2025/03/03 15:59:24 by ryada            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = pipex
 
 # Compiler and Flags
 CC = gcc
-CFLAGS = -Werror -Wall -Wextra -g
+CFLAGS = -Werror -Wall -Wextra
 
 # Remove Command
 RM = rm -rf
@@ -33,7 +33,12 @@ SRCS =  $(SRC_DIR)/getenv.c \
 		$(SRC_DIR)/utils.c
 
 # Source Files (Bonus)
-SRCS_BONUS = $(BONUS_DIR)/getenv_bonus.c \
+SRCS_BONUS = $(BONUS_DIR)/child_bonus.c \
+				$(BONUS_DIR)/edata_bonus.c \
+				$(BONUS_DIR)/error_bonus.c \
+				$(BONUS_DIR)/exec_bonus.c \
+				$(BONUS_DIR)/getenv_bonus.c \
+				$(BONUS_DIR)/heredoc_bonus.c \
 				$(BONUS_DIR)/pipex_bonus.c \
 				$(BONUS_DIR)/process_bonus.c \
 				$(BONUS_DIR)/utils_bonus.c \

@@ -6,32 +6,32 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:32:40 by ryada             #+#    #+#             */
-/*   Updated: 2025/03/03 16:05:22 by ryada            ###   ########.fr       */
+/*   Updated: 2025/03/12 13:14:42 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_BONUS_H
-#define PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <string.h>
-#include "../libft/libft.h"
-#include "../gnl/get_next_line.h"
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <string.h>
+# include "../libft/libft.h"
+# include "../gnl/get_next_line.h"
 
 //execution data structure
 typedef struct s_edata
 {
-	int here_doc;
-	int num_cmds;
-	char *current_cmd;
-	pid_t *pid;
-	int status;
-	int prev_pipe[2];
-	int next_pipe[2];
+	int		here_doc;
+	int		num_cmds;
+	char	*current_cmd;
+	pid_t	*pid;
+	int		status;
+	int		prev_pipe[2];
+	int		next_pipe[2];
 }	t_edata;
 
 //child_bonus.c//
@@ -47,7 +47,8 @@ void	ft_update_pipe(int *prev, int *next);
 //error_bonus.c//
 void	ft_error_exit(char *msg);
 void	ft_safe_print_error(const char *msg, const char *arg);
-void	ft_cmd_error_handler(int type, char **cmd_tab, char *cmd_path, pid_t *pid);
+void	ft_cmd_error_handler(int type, char **cmd_tab,
+			char *cmd_path, pid_t *pid);
 void	ft_general_error_handler(t_edata edata, int type);
 
 //exec_bonus.c//

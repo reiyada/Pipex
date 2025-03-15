@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 08:33:43 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/24 13:15:25 by ryada            ###   ########.fr       */
+/*   Updated: 2025/03/12 11:53:42 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ void	ft_free_tab(char **tab)
 	tab = NULL;
 }
 
-int ft_open_file(char *filename, int second)
+int	ft_open_file(char *filename, int second)
 {
 	int	fd;
 
-	if (second)//second cmd
-		fd = open(filename, O_WRONLY | O_CREAT |O_TRUNC, 0644);
+	if (second)
+		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else
 		fd = open(filename, O_RDONLY);
 	if (fd < 0)
@@ -51,7 +51,7 @@ void	ft_error_handler(int type, char **cmd_tab, char *cmd_path)
 	if (type == 1)
 	{
 		ft_putstr_fd("[Error] Command parsing failed!\n", 2);
-		ft_free_tab(cmd_tab); //FREE MEMORY BEFORE EXITING
+		ft_free_tab(cmd_tab);
 		exit(1);
 	}
 	else if (type == 2)

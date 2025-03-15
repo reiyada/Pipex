@@ -6,28 +6,27 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:34:18 by ryada             #+#    #+#             */
-/*   Updated: 2025/02/25 15:28:55 by ryada            ###   ########.fr       */
+/*   Updated: 2025/03/12 16:52:00 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-
 
 void	ft_exec(char *cmd, char **envp)
 {
 	char	**cmd_tab;
 	char	*cmd_path;
 
-	cmd_tab = ft_split(cmd, ' ');//(ex) "ls -l" -> cmd_tab[0] = "ls", cmd_tab[1] = "-l"
+	cmd_tab = ft_split(cmd, ' ');
 	if (!cmd_tab || !cmd_tab[0])
 		ft_error_handler(1, cmd_tab, NULL);
-	if (ft_strchr(cmd_tab[0], '/'))//check if the given cmd is already with the path
-		cmd_path = cmd_tab[0];
+	if (ft_strchr(cmd_tab[0], '/'))
+		cmd_path = ft_strdup(cmd_tab[0]);
 	else
-		cmd_path = ft_get_path(cmd_tab[0], envp);//(ex) "ls -l" -> find the enviromental path of "ls" -> /bin/ls
-	if (!cmd_path)//if there is no path
+		cmd_path = ft_get_path(cmd_tab[0], envp);
+	if (!cmd_path)
 		ft_error_handler(2, cmd_tab, cmd_path);
-	if (execve(cmd_path, cmd_tab, envp) == -1)// execute the command, and if it fails,
+	if (execve(cmd_path, cmd_tab, envp) == -1)
 		ft_error_handler(3, cmd_tab, cmd_path);
 	free(cmd_path);
 	ft_free_tab(cmd_tab);
@@ -37,38 +36,38 @@ void	ft_first_child(char **argv, int *pipe_fd, char **envp)
 {
 	int	fd;
 
-	fd = ft_open_file(argv[1], 0);//open the infile and read
+	fd = ft_open_file(argv[1], 0);
 	if (fd < 0)
 	{
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
 		exit(1);
 	}
-	dup2(fd, STDIN_FILENO);//set argv[1] as the input of the child process
+	dup2(fd, STDIN_FILENO);
 	close(fd);
-	dup2(pipe_fd[1], STDOUT_FILENO);//set the pipe(write) as the output of the child process
-	close(pipe_fd[0]);//close the pipe(read) because we dont need it
+	dup2(pipe_fd[1], STDOUT_FILENO);
+	close(pipe_fd[0]);
 	close(pipe_fd[1]);
-	ft_exec(argv[2], envp);//execute the first command
+	ft_exec(argv[2], envp);
 }
 
 void	ft_second_child(char **argv, int *pipe_fd, char **envp)
 {
 	int	fd;
 
-	fd = ft_open_file(argv[4], 1);//open the outfile and write, create if it doesnt exist, empty it if it exists already
+	fd = ft_open_file(argv[4], 1);
 	if (fd < 0)
 	{
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
 		exit(1);
 	}
-	dup2(fd, STDOUT_FILENO);//set argv[4] as the output of the parent process
+	dup2(fd, STDOUT_FILENO);
 	close(fd);
-	dup2(pipe_fd[0], STDIN_FILENO);//set the pipe(read) as the input of the parent process
-	close(pipe_fd[1]);//close the pipe(write) because we dont need it
+	dup2(pipe_fd[0], STDIN_FILENO);
+	close(pipe_fd[1]);
 	close(pipe_fd[0]);
-	ft_exec(argv[3], envp);//execute the second command
+	ft_exec(argv[3], envp);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -85,25 +84,16 @@ int	main(int argc, char **argv, char **envp)
 	pid1 = fork();
 	if (pid1 == -1)
 		return (ft_putstr_fd("[Error] Fork failed!\n", 2), 1);
-	if (pid1 == 0) // First child executes cmd1
+	if (pid1 == 0)
 		ft_first_child(argv, pipe_fd, envp);
-	close(pipe_fd[1]); // Parent closes write end of pipe
+	close(pipe_fd[1]);
 	pid2 = fork();
 	if (pid2 == -1)
 		return (ft_putstr_fd("[Error] Fork failed!\n", 2), 1);
-	if (pid2 == 0) // Second child executes cmd2
+	if (pid2 == 0)
 		ft_second_child(argv, pipe_fd, envp);
-	close(pipe_fd[0]); // Parent closes read end of pipe
-	waitpid(pid1, &status, 0); // Wait for cmd1
-	waitpid(pid2, &status, 0); // Wait for cmd2
-	return (WEXITSTATUS(status)); // Return the exit status of cmd2 (last command)
+	close(pipe_fd[0]);
+	waitpid(pid1, &status, 0);
+	waitpid(pid2, &status, 0);
+	return (WEXITSTATUS(status));
 }
-
-// note about the exit status
-// You need to exit with the exit status of the LAST command
-// (ex) ls -l | ls -a -> exit with 0 bc ls -a(LAST CMD) succeed
-// When we use pipes, the last cmd matters the most 
-// (ex) ffffasdj | ls -a -> we ignore the first cmd so we just execute ls -a and exit with 0
-// (ex) ls -l | fjsaflsajdl -> we exit with 127 bc the las cmd was not found
-// when the cmd was not found, you exit with 127
-// you can always check the esit status by doing "echo $?" on terminal

@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:55:21 by ryada             #+#    #+#             */
-/*   Updated: 2025/03/03 15:55:57 by ryada            ###   ########.fr       */
+/*   Updated: 2025/03/12 17:06:41 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@ void	ft_error_exit(char *msg)
 
 void	ft_safe_print_error(const char *msg, const char *arg)
 {
-	write(2, msg, ft_strlen(msg)); // Write the error message to stderr
+	write(2, msg, ft_strlen(msg));
 	if (arg)
 	{
-		write(2, arg, ft_strlen(arg)); // Write the command name
-		write(2, "\n", 1); // Ensure a newline after each message
+		write(2, arg, ft_strlen(arg));
+		write(2, "\n", 1);
 	}
 }
 
-//cmd error handler
-void	ft_cmd_error_handler(int type, char **cmd_tab, char *cmd_path, pid_t *pid)
+void	ft_cmd_error_handler(int type, char **cmd_tab,
+		char *cmd_path, pid_t *pid)
 {
 	if (type == 1)
 		ft_safe_print_error("[Error] Command parsing failed!\n", NULL);
@@ -37,10 +37,9 @@ void	ft_cmd_error_handler(int type, char **cmd_tab, char *cmd_path, pid_t *pid)
 		ft_safe_print_error("[Error] Command not found! : ", cmd_tab[0]);
 	else if (type == 3)
 		ft_safe_print_error("[Error] Command execution failed!: ", cmd_tab[0]);
-
-	ft_free_tab(cmd_tab);
-	if (cmd_path && cmd_path != cmd_tab[0]) 
+	if (cmd_path && cmd_path != cmd_tab[0])
 		free(cmd_path);
+	ft_free_tab(cmd_tab);
 	if (type == 2)
 	{
 		free(pid);
@@ -53,8 +52,7 @@ void	ft_cmd_error_handler(int type, char **cmd_tab, char *cmd_path, pid_t *pid)
 	}
 }
 
-//other error handler
-void ft_general_error_handler(t_edata edata, int type)
+void	ft_general_error_handler(t_edata edata, int type)
 {
 	free(edata.pid);
 	if (type == 1)

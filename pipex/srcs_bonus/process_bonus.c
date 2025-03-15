@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:33:22 by ryada             #+#    #+#             */
-/*   Updated: 2025/03/03 15:55:01 by ryada            ###   ########.fr       */
+/*   Updated: 2025/03/12 12:04:44 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,16 @@ void	ft_wait_children(t_edata *edata)
 {
 	int	i;
 	int	status;
-	int	last_exit; //Store the last exit status
+	int	last_exit;
 
 	i = 0;
 	last_exit = 0;
 	while (i < edata->num_cmds)
 	{
 		waitpid(edata->pid[i], &status, 0);
-		if (WIFEXITED(status)) //Ensure the process exited normally
+		if (WIFEXITED(status))
 			last_exit = WEXITSTATUS(status);
 		i++;
 	}
-	edata->status = last_exit; //Save the last command's exit status
+	edata->status = last_exit;
 }

@@ -6,7 +6,7 @@
 #    By: ryada <ryada@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/13 12:12:41 by ryada             #+#    #+#              #
-#    Updated: 2025/03/03 15:59:24 by ryada            ###   ########.fr        #
+#    Updated: 2025/03/15 11:42:33 by ryada            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,13 +54,18 @@ OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 # Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-# Default Rule - Compile Pipex (Mandatory) (Now Cleans First)
-all: clean $(LIBFT) $(NAME)
+# Default Rule - Compile Pipex (Mandatory)
+all: $(LIBFT) $(NAME)
 
 # Compile Pipex (Mandatory)
 $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -L$(LIBFT_DIR) -lft
 	@echo "✅ Pipex (Mandatory) compiled successfully!"
+
+# Compile Pipex (Bonus) - Overrides the Mandatory Version
+bonus: $(LIBFT) $(OBJS_BONUS)
+	@$(CC) $(CFLAGS) $(OBJS_BONUS) -o $(NAME) -L$(LIBFT_DIR) -lft
+	@echo "🚀 Pipex (Bonus) compiled successfully!"
 
 # Compile Object Files (Mandatory)
 $(SRC_DIR)/%.o: $(SRC_DIR)/%.c
@@ -72,11 +77,6 @@ $(BONUS_DIR)/%.o: $(BONUS_DIR)/%.c
 
 $(GNL_DIR)/%.o: $(GNL_DIR)/%.c
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
-# Compile Bonus Pipex (Now Cleans First)
-bonus: fclean $(LIBFT) $(OBJS_BONUS)
-	@$(CC) $(CFLAGS) $(OBJS_BONUS) -o $(NAME) -L$(LIBFT_DIR) -lft
-	@echo "🚀 Pipex (Bonus) compiled successfully!"
 
 # Compile Libft
 $(LIBFT):

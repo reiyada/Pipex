@@ -6,7 +6,7 @@
 /*   By: ryada <ryada@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:50:57 by ryada             #+#    #+#             */
-/*   Updated: 2025/03/03 15:53:07 by ryada            ###   ########.fr       */
+/*   Updated: 2025/03/12 16:59:48 by ryada            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_exec(char *cmd, char **envp, pid_t *pid)
 	if (!cmd_tab || !cmd_tab[0])
 		ft_cmd_error_handler(1, cmd_tab, NULL, pid);
 	if (ft_strchr(cmd_tab[0], '/'))
-		cmd_path = cmd_tab[0];
+		cmd_path = ft_strdup(cmd_tab[0]);
 	else
 		cmd_path = ft_get_path(cmd_tab[0], envp);
 	if (!cmd_path)
